@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple Dice Game</title>
+    <style>
+      .hidden {
+        display: none;
+      }
+      .player-active {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Simple Dice Game</h1>
+
+    <div class="player" id="player-0">
+      Player 1 Score: <span id="score-0">0</span>
+    </div>
+    <div class="player" id="player-1">
+      Player 2 Score: <span id="score-1">0</span>
+    </div>
+
+    <p>Current Player: <span id="current-player">Player 1</span></p>
+    <p>Current Roll: <span id="current-roll">-</span></p>
+
+    <button id="roll-dice">Roll Dice</button>
+    <button id="hold-score">Hold Score</button>
+    <button id="reset-game">Reset Game</button>
+
+    <script>
+      // Initial Variables
+      let scores = [0, 0];
+      let currentPlayer = 0;
+      let currentRoll = 0;
+      let playing = true;
+
+      // Function to roll the dice
+      function rollDice() {
+        if (playing) {
+          currentRoll = Math.floor(Math.random() * 6) + 1;
+          document.getElementById('current-roll').textContent = currentRoll;
+
+          // If the player rolls a 1, switch turns
+          if (currentRoll === 1) {
+            switchPlayer();
+          }
+        }
+      }
+
+      // Function to hold the score
+      function holdScore() {
+        if (playing) {
+          scores[currentPlayer] += currentRoll;
+          document.getElementById(`score-${currentPlayer}`).textContent =
+            scores[currentPlayer];
+
+          // Check if current player won
+          if (scores[currentPlayer] >= 20) {
+            document.getElementById('current-player').textContent = `Player ${
+              currentPlayer + 1
+            } Wins!`;
+            playing = false;
+          } else {
+            switchPlayer();
+          }
+        }
+      }
+
+      // Function to switch the active player
+      function switchPlayer() {
+        currentPlayer = currentPlayer === 0 ? 1 : 0;
+        document.getElementById('current-player').textContent = `Player ${
+          currentPlayer + 1
+        }`;
+        currentRoll = 0;
+        document.getElementById('current-roll').textContent = '-';
+      }
+
+      // Function to reset the game
+      function resetGame() {
+        scores = [0, 0];
+        currentPlayer = 0;
+        playing = true;
+        document.getElementById('score-0').textContent = 0;
+        document.getElementById('score-1').textContent = 0;
+        document.getElementById('current-player').textContent = 'Player 1';
+        document.getElementById('current-roll').textContent = '-';
+      }
+
+      // Event Listeners
+      document.getElementById('roll-dice').addEventListener('click', rollDice);
+      document
+        .getElementById('hold-score')
+        .addEventListener('click', holdScore);
+      document
+        .getElementById('reset-game')
+        .addEventListener('click', resetGame);
+    </script>
+  </body>
+</html>
